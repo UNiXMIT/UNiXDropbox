@@ -87,7 +87,7 @@ app.get('/files', (req, res) => {
             }
             completed++;
             if (completed === files.length) {
-                filesWithStats.sort((a, b) => b.stats.mtimeMs - a.stats.mtimeMs);
+                filesWithStats.sort((a, b) => a.stats.mtimeMs - b.stats.mtimeMs);
                 const sortedFiles = filesWithStats.map((fileStat) => fileStat.file);
                 res.json(sortedFiles);
             }
