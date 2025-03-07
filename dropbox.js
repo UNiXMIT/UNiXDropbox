@@ -42,17 +42,40 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage: storage });
+const upload = multer({
+  storage: storage,
+  limits: {
+      fileSize: 200 * 1024 * 1024,
+  },
+});
 
 app.use(express.static(__dirname));
 
-app.post('/upload', upload.array('files', 10), (req, res) => {
+app.post('/upload', upload.array('files', 10), (req, res, next) => {
+  if (!req.files || req.files.length === 0) {
+    return res.send("No files uploaded");
+  }
   res.send('Files uploaded successfully!');
+  const fileData = req.files.map((file) => ({
+    originalFilename: file.originalname,
+    filname: file.filename,
+    size: file.size,
+  }));
   const postData = {
-    content: JSON.stringify(req.files),
+    content: JSON.stringify(fileData),
     username: "KH Dropbox"
-};
-axios.post(process.env.KH_WEBHOOK, postData);
+  };
+  axios.post(process.env.KH_WEBHOOK, postData);
+}, (err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+      if (err.code === 'LIMIT_FILE_SIZE') {
+          return res.status(413).send('File size too large (max 200MB)');
+      }
+      return res.status(400).send('Multer error: ' + err.message);
+  } else if (err) {
+      return res.status(500).send('An error occurred: ' + err.message);
+  }
+  next();
 });
 
 app.get('/download/:filename', (req, res) => {

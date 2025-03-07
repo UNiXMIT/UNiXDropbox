@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(response => response.text())
             .then(message => {
                 console.log(message);
-                // alert(message);
+                alert(message);
                 loadFiles();
             })
             .catch(error => {
