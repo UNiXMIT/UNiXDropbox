@@ -8,7 +8,7 @@ runOptions=(
 -e KH_PASSWORD=strongPassword123
 --restart always
 -p 3000:3000
---health-cmd "curl -sf http://127.0.0.1:3000 || exit 1"
+--health-cmd "curl -sf -u username:strongPassword123 http://127.0.0.1:3000 || exit 1"
 --health-interval 30s
 --health-timeout 10s
 --health-retries 3
