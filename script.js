@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadButton = document.getElementById('uploadBtn');
     const fileList = document.getElementById('fileList');
 
+    const basePath = '/khdropbox';
+
     uploadButton.addEventListener('click', () => {
         const files = fileInput.files;
         if (files.length > 0) {
@@ -11,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('files', files[i]); 
             }
 
-            fetch('/upload', {
+            fetch(`${basePath}/upload`, {
                 method: 'POST',
                 body: formData,
             })
@@ -30,14 +32,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function loadFiles() {
-        fetch('/files')
+        fetch(`${basePath}/files`)
             .then(response => response.json())
             .then(files => {
                 fileList.innerHTML = '';
                 files.forEach(filename => {
                     const listItem = document.createElement('li');
                     const link = document.createElement('a');
-                    link.href = `/download/${filename}`;
+                    link.href = `${basePath}/download/${filename}`;
                     link.textContent = filename;
                     listItem.appendChild(link);
                     fileList.appendChild(listItem);
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('Error loading files:', error);
-                alert('Error loading files.');
+                // alert('Error loading files.');
             });
     }
 
