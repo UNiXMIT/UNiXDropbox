@@ -1,0 +1,116 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&family=Source+Code+Pro&display=swap');
+body {
+    margin: 0;
+    padding: 0 10px;
+    overflow-x: hidden;
+}
+
+#main {
+    width: 500px;
+    margin: 30px auto 0;
+}
+
+h1 {
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+h1:after {
+    width: 75px;
+    border-bottom: 4px solid #0570f6;
+    display: block;
+    content: "";
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+h2 {
+    font-family: "Roboto", sans-serif;
+    font-weight: 900;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+h2:after {
+    width: 35px;
+    border-bottom: 4px solid #0570f6;
+    display: block;
+    content: "";
+    margin-top: 5px;
+    margin-bottom: 30px;
+}
+
+input::file-selector-button {
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    line-height: 10px;
+    padding: 15px;
+    background: #0d0d0d;
+    color: #fff;
+    margin: 20px 10px 20px 0;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    border: 1px solid #0d0d0d;
+    transition: color 0.3s, background 0.3s;
+    text-decoration: none;
+    border-radius: 6px;
+    flex: 1;
+    height: 100%;
+}
+
+input::file-selector-button:hover {
+    background: #fff;
+    color: #0d0d0d;
+    cursor: pointer;
+}
+
+#uploadBtn {
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    line-height: 10px;
+    padding: 15px;
+    background: #0d0d0d;
+    color: #fff;
+    margin: 20px 10px 20px 50px;
+    display: inline-block;
+    width: 100px;
+    text-align: center;
+    border: 1px solid #0d0d0d;
+    transition: color 0.3s, background 0.3s;
+    text-decoration: none;
+    border-radius: 6px;
+    flex: 1;
+    height: 100%;
+}
+
+#uploadBtn:hover {
+    background: #fff;
+    color: #0d0d0d;
+    cursor: pointer;
+}
+
+#fileList {
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: #0570f6 !important;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+a:visited {
+    color: #000;
+    text-decoration: none;
+}
