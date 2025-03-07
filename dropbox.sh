@@ -6,6 +6,7 @@ runOptions=(
 -v /home/unix/khdropbox:/home/node/khdropbox
 -e KH_USER=username
 -e KH_PASSWORD=strongPassword123
+-e KH_WEBHOOK=https://webhookURL
 --restart always
 -p 3000:3000
 --health-cmd "curl -sf -u username:strongPassword123 http://127.0.0.1:3000 || exit 1"

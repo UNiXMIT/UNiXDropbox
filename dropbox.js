@@ -2,6 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const axios = require('axios');
 const basicAuth = require('express-basic-auth');
 require('dotenv').config();
 
@@ -47,6 +48,11 @@ app.use(express.static(__dirname));
 
 app.post('/upload', upload.array('files', 10), (req, res) => {
   res.send('Files uploaded successfully!');
+  const postData = {
+    content: JSON.stringify(req.files),
+    username: "KH Dropbox"
+};
+axios.post(process.env.KH_WEBHOOK, postData);
 });
 
 app.get('/download/:filename', (req, res) => {
@@ -69,9 +75,28 @@ app.get('/files', (req, res) => {
 
     fs.readdir(uploadPath, (err, files) => {
         if (err) {
-            console.log('Error reading directory:', err);
-        }
-        res.json(files);
+          console.error('Error reading directory:', err);
+          return res.status(500).send('Error reading files.');
+      }
+      const filesWithStats = [];
+      let completed = 0;
+      files.forEach((file) => {
+        fs.stat(path.join(uploadPath, file), (statErr, stats) => {
+            if (!statErr) {
+                filesWithStats.push({ file, stats });
+            }
+            completed++;
+            if (completed === files.length) {
+                filesWithStats.sort((a, b) => b.stats.mtimeMs - a.stats.mtimeMs);
+                const sortedFiles = filesWithStats.map((fileStat) => fileStat.file);
+                res.json(sortedFiles);
+            }
+        });
+    });
+
+    if(files.length === 0){
+      res.json([]);
+    }
     });
 });
 
