@@ -4,11 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const fileList = document.getElementById('fileList');
 
     uploadButton.addEventListener('click', () => {
-        const files = fileInput.files; // Modified
+        const files = fileInput.files;
         if (files.length > 0) {
             const formData = new FormData();
-            for (let i = 0; i < files.length; i++) { // Modified
-                formData.append('files', files[i]); // Modified
+            for (let i = 0; i < files.length; i++) { 
+                formData.append('files', files[i]); 
             }
 
             fetch('/upload', {
@@ -49,5 +49,5 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    loadFiles(); // Initial file load
+    loadFiles();
 });
