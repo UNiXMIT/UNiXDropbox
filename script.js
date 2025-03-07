@@ -19,7 +19,8 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(response => response.text())
             .then(message => {
-                alert(message);
+                console.log(message);
+                // alert(message);
                 loadFiles();
             })
             .catch(error => {
