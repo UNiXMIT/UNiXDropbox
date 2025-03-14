@@ -1,6 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const path = require('path');
+const contentDisposition = require('content-disposition');
 const fs = require('fs');
 const axios = require('axios');
 const basicAuth = require('express-basic-auth');
@@ -79,11 +80,11 @@ app.post('/upload', upload.array('files', 10), (req, res, next) => {
 });
 
 app.get('/download/:filename', (req, res) => {
-  const filename = req.params.filename;
-  const filePath = path.join(__dirname, 'uploads', filename);
+  const file = `${__dirname}/uploads/${req.params.filename}`;
 
-  if (fs.existsSync(filePath)) {
-    res.download(filePath, filename, (err) => {
+  if (fs.existsSync(file)) {
+    res.setHeader('Content-Disposition', contentDisposition(req.params.filename));
+    res.sendFile(file, req.params.filename, (err) => {
       if (err) {
         res.status(500).send('Error downloading file.');
       }
