@@ -31,7 +31,7 @@ app.get('/health', (req, res) => {
 
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  if (username === process.env.KH_USER && password === process.env.KH_PASSWORD) {
+  if (username === process.env.DB_USER && password === process.env.DB_PASSWORD) {
     req.session.loggedIn = true;
     res.sendStatus(200);
   } else {
@@ -89,9 +89,9 @@ app.post('/upload', requireAuth, upload.array('files', 10), (req, res, next) => 
   }));
   const postData = {
     content: JSON.stringify(fileData),
-    username: "KH Dropbox"
+    username: "Dropbox"
   };
-  axios.post(process.env.KH_WEBHOOK, postData);
+  axios.post(process.env.DB_WEBHOOK, postData);
 }, (err, req, res, next) => {
   if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {

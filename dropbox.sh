@@ -1,9 +1,9 @@
 #!/bin/bash
 
-containerName=khdropbox
-containerRepo=mf/khdropbox
+containerName=dropbox
+containerRepo=mf/dropbox
 runOptions=(
--v /home/unix/khdropbox:/home/node/khdropbox
+-v /home/unix/dropbox:/home/node/dropbox
 --restart always
 -p 3000:3000
 --health-cmd "curl -sf http://127.0.0.1:3000/health || exit 1"
@@ -40,8 +40,8 @@ updateContainer() {
 
 buildContainer() {
     printf "Building Container...\n\n"
-    curl -o $(dirname "$0")/khdropbox/Dockerfile https://raw.githubusercontent.com/UNiXMIT/UNiXDropbox/main/Dockerfile
-    sudo ${containerRuntime} build --tag ${containerRepo} -f $(dirname "$0")/khdropbox/Dockerfile
+    curl -o $(dirname "$0")/dropbox/Dockerfile https://raw.githubusercontent.com/UNiXMIT/UNiXDropbox/main/Dockerfile
+    sudo ${containerRuntime} build --tag ${containerRepo} -f $(dirname "$0")/dropbox/Dockerfile
 }
 
 startContainer() {
