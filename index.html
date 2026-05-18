@@ -5,7 +5,21 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="main">
+    <div id="loginScreen">
+        <h1>Dropbox</h1>
+        <div class="login-field">
+            <label for="usernameInput">Username</label>
+            <input type="text" id="usernameInput" autocomplete="username" />
+        </div>
+        <div class="login-field">
+            <label for="passwordInput">Password</label>
+            <input type="password" id="passwordInput" autocomplete="current-password" />
+        </div>
+        <button id="loginBtn">Login</button>
+        <p id="loginError">Invalid credentials!</p>
+    </div>
+
+    <div id="main" style="display:none;">
         <h1>KH Dropbox</h1>
         <input type="file" id="fileInput" multiple>
         <button id="uploadBtn">Upload</button>

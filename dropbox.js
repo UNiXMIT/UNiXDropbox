@@ -4,18 +4,45 @@ const path = require('path');
 const contentDisposition = require('content-disposition');
 const fs = require('fs');
 const axios = require('axios');
-const basicAuth = require('express-basic-auth');
+const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
 const port = 3000;
 
-const users = { [process.env.KH_USER]: process.env.KH_PASSWORD };
-app.use(basicAuth({
-  users: users,
-  challenge: true,
-  realm: 'KH Dropbox',
+app.use(express.json());
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'changeme',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { secure: false }
 }));
+
+function requireAuth(req, res, next) {
+  if (req.session && req.session.loggedIn) return next();
+  res.status(401).send('Unauthorized');
+}
+
+app.use(express.static(__dirname));
+
+app.get('/health', (req, res) => {
+  res.sendStatus(200);
+});
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  if (username === process.env.KH_USER && password === process.env.KH_PASSWORD) {
+    req.session.loggedIn = true;
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(401);
+  }
+});
+
+app.post('/logout', (req, res) => {
+  req.session.destroy();
+  res.sendStatus(200);
+});
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -50,9 +77,7 @@ const upload = multer({
   },
 });
 
-app.use(express.static(__dirname));
-
-app.post('/upload', upload.array('files', 10), (req, res, next) => {
+app.post('/upload', requireAuth, upload.array('files', 10), (req, res, next) => {
   if (!req.files || req.files.length === 0) {
     return res.send("No files uploaded");
   }
@@ -79,7 +104,7 @@ app.post('/upload', upload.array('files', 10), (req, res, next) => {
   next();
 });
 
-app.get('/download/:filename', (req, res) => {
+app.get('/download/:filename', requireAuth, (req, res) => {
   const file = `${__dirname}/uploads/${req.params.filename}`;
 
   if (fs.existsSync(file)) {
@@ -94,7 +119,7 @@ app.get('/download/:filename', (req, res) => {
   }
 });
 
-app.get('/files', (req, res) => {
+app.get('/files', requireAuth, (req, res) => {
     const uploadPath = path.join(__dirname, 'uploads');
 
     fs.readdir(uploadPath, (err, files) => {
