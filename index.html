@@ -25,7 +25,12 @@
 
     <div id="main" style="display:none;">
         <input type="file" id="fileInput" multiple>
+        <p id="fileLimitNote">Max file size: 200MB per file.</p>
         <button id="uploadBtn">Upload</button>
+        <div id="uploadProgress" aria-live="polite">
+            <div id="uploadProgressBar"></div>
+            <p id="uploadProgressText">Upload progress: 0%</p>
+        </div>
 
         <h2>Files:</h2>
         <ul id="fileList"></ul>

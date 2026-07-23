@@ -6,6 +6,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContent = document.getElementById('main'); // was 'mainContent'
     const loginBtn = document.getElementById('loginBtn');
     const loginError = document.getElementById('loginError');
+    const uploadProgress = document.getElementById('uploadProgress');
+    const uploadProgressBar = document.getElementById('uploadProgressBar');
+    const uploadProgressText = document.getElementById('uploadProgressText');
 
     const basePath = '';
 
@@ -78,19 +81,58 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.append('files', file);
         }
 
-        fetch(`${basePath}/upload`, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => {
-            if (response.ok) {
+        uploadButton.disabled = true;
+        fileInput.disabled = true;
+        uploadProgress.style.display = 'block';
+        uploadProgressText.style.display = 'block';
+        uploadProgressBar.style.width = '0%';
+        uploadProgressText.textContent = 'Upload progress: 0%';
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `${basePath}/upload`);
+
+        xhr.upload.onprogress = (event) => {
+            if (!event.lengthComputable) {
+                uploadProgressText.textContent = 'Uploading...';
+                return;
+            }
+
+            const percent = Math.round((event.loaded / event.total) * 100);
+            uploadProgressBar.style.width = `${percent}%`;
+            uploadProgressText.textContent = `Upload progress: ${percent}%`;
+        };
+
+        xhr.onload = () => {
+            uploadButton.disabled = false;
+            fileInput.disabled = false;
+
+            if (xhr.status >= 200 && xhr.status < 300) {
+                uploadProgressBar.style.width = '100%';
+                uploadProgressText.textContent = 'Upload complete: 100%';
                 fileInput.value = '';
                 loadFiles();
-            } else {
-                alert('Upload failed.');
+                setTimeout(() => {
+                    uploadProgress.style.display = 'none';
+                    uploadProgressText.style.display = 'none';
+                }, 800);
+                return;
             }
-        })
-        .catch(() => alert('Upload failed.'));
+
+            const errorText = xhr.responseText || 'Upload failed.';
+            uploadProgress.style.display = 'none';
+            uploadProgressText.style.display = 'none';
+            alert(errorText);
+        };
+
+        xhr.onerror = () => {
+            uploadButton.disabled = false;
+            fileInput.disabled = false;
+            uploadProgress.style.display = 'none';
+            uploadProgressText.style.display = 'none';
+            alert('Upload failed.');
+        };
+
+        xhr.send(formData);
     });
 
     // loadFiles();
