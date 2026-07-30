@@ -10,7 +10,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadProgressBar = document.getElementById('uploadProgressBar');
     const uploadProgressText = document.getElementById('uploadProgressText');
 
-    const basePath = '';
+    // Derive base path from the current page so the app works correctly
+    // whether served at the root or behind a reverse-proxy sub-path (e.g. /khdropbox/).
+    const basePath = window.location.pathname.replace(/\/[^\/]*$/, '');
 
     // Check if already logged in
     if (sessionStorage.getItem('loggedIn') === 'true') {
